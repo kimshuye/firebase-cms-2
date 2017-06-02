@@ -1,35 +1,31 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SampleComponent } from './sample.component';
-import { SampleDirective } from './sample.directive';
-import { SamplePipe } from './sample.pipe';
-import { SampleService } from './sample.service';
 
-export * from './sample.component';
-export * from './sample.directive';
-export * from './sample.pipe';
-export * from './sample.service';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
+
+import { User } from './model/user/user';
+export { User } from './model/user/user';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    AngularFireModule,
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
   declarations: [
-    SampleComponent,
-    SampleDirective,
-    SamplePipe
   ],
   exports: [
-    SampleComponent,
-    SampleDirective,
-    SamplePipe
   ]
 })
-export class SampleModule {
+export class FirebaseCMSModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: SampleModule,
-      providers: [SampleService]
+      ngModule: FirebaseCMSModule,
+      providers: [ User ]
     };
   }
 }
