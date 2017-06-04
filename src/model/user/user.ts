@@ -4,6 +4,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/throw';
+
 
 export interface USER_REGISTER {
     name: string;
@@ -22,6 +24,7 @@ export class User {
     }
 
     register( data: USER_REGISTER ) : Observable<firebase.User> {
+        if ( data.name === void 0 || ! data.name ) return Observable.throw( new Error('Please input name.') );
         let promise = this.auth.createUserWithEmailAndPassword( data.email, data.password );
         return Observable.fromPromise( promise );
     }
