@@ -12,7 +12,7 @@ export { User } from './model/user/user';
 @NgModule({
   imports: [
     CommonModule,
-    AngularFireModule,
+    AngularFireModule, // 여기서 초기화를 하지 않는다. 그냥 사용만하고, 부모 프로젝트에서 초기화를 한다.
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
