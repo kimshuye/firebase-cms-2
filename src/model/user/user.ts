@@ -23,7 +23,11 @@ export class User {
         this.auth = angularFireAuth.auth;
     }
 
-    register( data: USER_REGISTER ) : Observable<firebase.User> {
+    /**
+     * 
+     * @param data 
+     */
+    register( data: USER_REGISTER ) : Observable< firebase.User > {
         if ( data.name === void 0 || ! data.name ) return Observable.throw( new Error('Please input name.') );
         let promise = this.auth.createUserWithEmailAndPassword( data.email, data.password );
         return Observable.fromPromise( promise );
