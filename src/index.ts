@@ -9,6 +9,10 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { User } from './model/user/user';
 export { User } from './model/user/user';
 
+import { UserTest } from './model/user/userTest';
+export { UserTest } from './model/user/userTest';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -25,7 +29,7 @@ export class FirebaseCMSModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FirebaseCMSModule,
-      providers: [ User ]
+      providers: [ User, UserTest ]
     };
   }
 }

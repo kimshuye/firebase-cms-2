@@ -8,9 +8,10 @@ import 'rxjs/add/observable/throw';
 
 
 export interface USER_REGISTER {
-    name: string;
     email: string;
     password: string;
+    displayName: string;
+    photoUrl: string;
 }
 
 export interface USER_REGISTER_RESONSE {
@@ -18,8 +19,8 @@ export interface USER_REGISTER_RESONSE {
 
 @Injectable()
 export class User {
-    auth;
-    constructor( private angularFireAuth: AngularFireAuth ) {
+    auth: firebase.auth.Auth;
+    constructor(private angularFireAuth: AngularFireAuth) {
         this.auth = angularFireAuth.auth;
     }
 
@@ -27,11 +28,39 @@ export class User {
      * 
      * @param data 
      */
-    register( data: USER_REGISTER ) : Observable< firebase.User > {
-        if ( data.name === void 0 || ! data.name ) return Observable.throw( new Error('Please input name.') );
-        let promise = this.auth.createUserWithEmailAndPassword( data.email, data.password );
-        return Observable.fromPromise( promise );
+    create(data: USER_REGISTER): Promise<firebase.User> {
+        return <Promise<firebase.User>><any>this.auth.createUserWithEmailAndPassword(data.email, data.password);
     }
+
+    update(user: firebase.User, data: USER_REGISTER ) : firebase.Promise<void> {
+        return user.updateProfile({
+                    displayName: data.displayName,
+                    photoURL: data.photoUrl
+                });
+    }
+
+
+    /**
+     * 
+     * @note Callback style function
+     * 
+     * @param data - user registration data.
+     * @param success 
+     * @param error 
+     */
+    register( data: USER_REGISTER, success, error ) {
+
+        this.create( data )
+            .then( user => this.update( user, data ) )
+            .then( success )
+            .catch( error );
+
+    }
+
+
+
+
+
 
 
 }
