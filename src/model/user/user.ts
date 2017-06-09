@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/throw';
+
+
+import { Database } from './../database/database';
 
 
 export interface USER_REGISTER {
@@ -20,9 +22,38 @@ export interface USER_REGISTER_RESONSE {
 @Injectable()
 export class User {
     auth: firebase.auth.Auth;
-    constructor(private angularFireAuth: AngularFireAuth) {
+    private _isAdmin: boolean = false;
+    constructor(
+        private angularFireAuth: AngularFireAuth,
+        private database: Database
+    ) {
+
         this.auth = angularFireAuth.auth;
+        this.auth.onAuthStateChanged( (user: firebase.User) => {
+            console.log("Auth state changed");
+            if ( user ) {
+                console.log("User logged in");
+            }
+            else {
+                console.log("User logged out");
+            }
+            this.checkAdmin();
+        }, e => {
+
+        });
+
+
     }
+
+    /**
+     * GETTERS
+     */
+
+     get uid() {
+         if ( this.isLogged ) return this.auth.currentUser.uid;
+     }
+
+    /// eo GETTERS
 
     /**
      * 
@@ -59,7 +90,42 @@ export class User {
 
 
 
+    logout() {
+        this.auth.signOut().then(()=>{
+            console.log("sign out ok");
+        }, () => {
+            console.log("sing out error");
+        })
+    }
 
+    /**
+     * 
+     */
+    get isLogged() : boolean {
+        return this.auth.currentUser !== null;
+    }
+
+    get isAdmin() : boolean {
+        return this._isAdmin;
+    }
+
+
+    /**
+     * checks if the logged in user is admin.
+     */
+    checkAdmin() {
+        if ( ! this.isLogged ) {
+            console.log("checkAdmin() not logged");
+            this._isAdmin = false;
+            return;
+        }
+        console.log("Admin check");
+        this.database.root.child('admin').child( this.uid ).once('value').then( s => {
+            let re = s.val();
+            console.log(`${this.uid} is admin ? ${re}`);
+            if ( re === true ) this._isAdmin = true;
+         });
+    }
 
 
 
