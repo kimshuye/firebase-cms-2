@@ -1,6 +1,13 @@
-# firebase-cms
+# Firebase CMS
 
-## Installation
+This s a headless content management system based on Firebase.
+
+# TODO
+
+@see https://overv.io/~/cooperative-poultry/ at firebaes-cms issues.
+
+
+# Installation
 
 To install this library, run:
 
@@ -25,7 +32,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Import your library
-import { SampleModule } from 'firebase-cms';
+import { FirebaseCMSModule } from 'firebase-cms';
 
 @NgModule({
   declarations: [
@@ -35,7 +42,7 @@ import { SampleModule } from 'firebase-cms';
     BrowserModule,
 
     // Specify your library as an import
-    LibraryModule
+    FirebaseCMSModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -43,30 +50,52 @@ import { SampleModule } from 'firebase-cms';
 export class AppModule { }
 ```
 
-Once your library is imported, you can use its components, directives and pipes in your Angular application:
 
-```xml
-<!-- You can now use your library component in app.component.html -->
-<h1>
-  {{title}}
-</h1>
-<sampleComponent></sampleComponent>
-```
 
-## Development
-
-To generate all `*.js`, `*.d.ts` and `*.metadata.json` files:
-
-```bash
-$ npm run build
-```
-
-To lint all `*.ts` files:
-
-```bash
-$ npm run lint
-```
-
-## License
+# License
 
 MIT © [JaeHo Song](mailto:thruthesky@gmail.com)
+
+
+# Datastructure
+
+
+/forum/post/$post-push-key {
+            uid:
+            subject:
+            categories:
+            timestamp:
+          }
+          ...
+
+/forum/post-content/$post-push-key { content: ... }
+
+/forum/category-post-relatoin/
+        + $category-id
+          {
+            $post-push-key
+            ...
+          }
+
+
+/forum/category-sticky/
+        + $category-id {
+          $post-push-id
+          ...
+        }
+
+/forum/category-all-stick/$push-push-key/
+
+
+
+
+
+
+/forum/post-likes/$post-push-key/ { likes: 123 } ; to oreder by likes
+/forum/post-likes\-users/$post-push-key/ { $uid: true } ; to un-like.
+
+/forum/post-dislikes/$post-push-key/ { dislikes: 123 } ; to oreder by likes
+/forum/post-dislike-users/$post-push-key { $uid: true } ; to un-dislike.
+
+
+/forum/post-report/$push-push-key/ { stamp: 1234 }

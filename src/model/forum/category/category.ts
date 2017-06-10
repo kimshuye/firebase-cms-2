@@ -17,6 +17,7 @@ export interface CATEGORY_CREATE extends CATEGORY_EDIT {};
 
 export type CATEGORIES = Array<CATEGORY>;
 
+const CATEGORY_PATH = 'forum/category';
 
 @Injectable()
 export class Category {
@@ -26,7 +27,7 @@ export class Category {
     constructor(
         private database: Database
     ) {
-        this.category = this.database.root.child('forum').child('category');
+        this.category = this.database.root.child( CATEGORY_PATH );
     }
 
 
@@ -51,13 +52,42 @@ export class Category {
      * @endcode
      */
     edit( data: CATEGORY_EDIT, success: () => void, error: (e) => void ) {
+
+        data = this.database.undefinedToNull( data );
+
+
+        console.log("data: ", data);
+
         this.category.child(data.id).set( data )
             .then( success )
             .catch( error );
     }
 
 
+
     /**
+     * 
+     * Deletes a forum category
+     * 
+     * @param id 
+     * @param success 
+     * @param error 
+     * 
+     * @code
+     *      this.category.delete( id, () => console.log("Category deleted"), e => console.error(e) );
+     * @endcode
+     * 
+     */
+    delete( id: string, success: () => void, error: (e) => void ) {
+        this.category.child( id ).set( null )
+            .then( success )
+            .catch( error );
+    }
+
+
+    /**
+     * 
+     * Use this method to get all the categores. But no live-update. Only get all categories.
      * 
      * @param success 
      * @param error 
@@ -83,5 +113,24 @@ export class Category {
             success( categories );
         }, e => error );
         
+    }
+
+
+
+    /**
+     * 
+     * Use this to live-update.
+     * 
+     * @code
+     
+                this.category.observe().subscribe( res => {
+                    console.log(res);
+                    this.categories = res;
+                });
+
+     * @endcode
+     */
+    observe() {
+        return this.database.af.list( CATEGORY_PATH );
     }
 }

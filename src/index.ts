@@ -23,12 +23,13 @@ import { CategoryTest } from './model/forum/category/categoryTest';
 export { CategoryTest } from './model/forum/category/categoryTest';
 
 import { Post } from './model/forum/post/post';
-export { Post } from './model/forum/post/post';
+export { Post, POST_CREATE, POST_EDIT } from './model/forum/post/post';
 
+import { PostTest } from './model/forum/post/postTest';
+export { PostTest } from './model/forum/post/postTest';
 
 import { Comment } from './model/forum/comment/comment';
 export { Comment } from './model/forum/comment/comment';
-
 
 
 @NgModule({
@@ -47,7 +48,7 @@ export class FirebaseCMSModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FirebaseCMSModule,
-      providers: [ User, UserTest, Database, Category, CategoryTest, Post, Comment ]
+      providers: [ User, UserTest, Database, Category, CategoryTest, Post, PostTest, Comment ]
     };
   }
 }

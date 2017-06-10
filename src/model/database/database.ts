@@ -31,8 +31,27 @@ export class Database {
 
     root: firebase.database.Reference;
     constructor(
-        private angularFireDatabase: AngularFireDatabase ) {
+        public af: AngularFireDatabase) {
         //
-        this.root = angularFireDatabase.database.ref('/');        
+        this.root = af.database.ref('/');
+    }
+
+    /**
+     * 
+     * Turns undefined into null to avoid "first argument contains undefined in property firebase" error.
+     * 
+     * @param obj 
+     * 
+     * @code
+     *              data = this.database.undefinedToNull( data );
+     * @endcode
+     * 
+     */
+    undefinedToNull(obj) {
+        obj = JSON.parse(JSON.stringify(obj, function (k, v) {
+                if ( v === undefined ) return null;
+                else return v;
+            } ) );
+        return obj;
     }
 }
