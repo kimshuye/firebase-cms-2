@@ -163,7 +163,7 @@ export class Forum {
 
 
     path( p: string ) {
-        return this.debugPath + CATEGORY_PATH;
+        return this.debugPath + p;
     }
 
 
