@@ -57,7 +57,12 @@ export class AppModule { }
 MIT © [JaeHo Song](mailto:thruthesky@gmail.com)
 
 
-# Datastructure
+# Database Structure & Manipulation
+
+## One time data submisstion
+
+* For security reason and For reducing overhead on client, client will connect/send data one time to server and clould-functions will take care of rest.
+
 
 
 /forum/post/$post-push-key {
@@ -70,8 +75,7 @@ MIT © [JaeHo Song](mailto:thruthesky@gmail.com)
 
 /forum/post-content/$post-push-key { content: ... }
 
-/forum/category-post-relatoin/
-        + $category-id
+/forum/category-post-relatoin/+ $category-id
           {
             $post-push-key
             ...

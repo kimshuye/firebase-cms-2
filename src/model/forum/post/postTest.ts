@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Post, POST_EDIT } from './post';
+import { Post, POST } from './post';
 
 @Injectable()
 export class PostTest {

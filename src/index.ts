@@ -17,19 +17,28 @@ import { UserTest } from './model/user/userTest';
 export { UserTest } from './model/user/userTest';
 
 
-import { Category } from './model/forum/category/category';
-export { Category, CATEGORIES } from './model/forum/category/category';
-import { CategoryTest } from './model/forum/category/categoryTest';
-export { CategoryTest } from './model/forum/category/categoryTest';
+// import { Category } from './model/forum/category/category';
+// export { Category } from './model/forum/category/category';
+
+// import { CategoryTest } from './model/forum/category/categoryTest';
+// export { CategoryTest } from './model/forum/category/categoryTest';
 
 import { Post } from './model/forum/post/post';
-export { Post, POST_CREATE, POST_EDIT } from './model/forum/post/post';
+export { Post, POST } from './model/forum/post/post';
 
 import { PostTest } from './model/forum/post/postTest';
 export { PostTest } from './model/forum/post/postTest';
 
 import { Comment } from './model/forum/comment/comment';
 export { Comment } from './model/forum/comment/comment';
+
+///
+import { ForumService } from './model/forum/forum.service';
+export { ForumService } from './model/forum/forum.service';
+export { CATEGORY, CATEGORIES } from './model/forum/forum.interface';
+
+
+
 
 
 @NgModule({
@@ -48,7 +57,9 @@ export class FirebaseCMSModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: FirebaseCMSModule,
-      providers: [ User, UserTest, Database, Category, CategoryTest, Post, PostTest, Comment ]
+      providers: [ User, UserTest, Database, Post, PostTest, Comment,
+        ForumService
+      ]
     };
   }
 }
