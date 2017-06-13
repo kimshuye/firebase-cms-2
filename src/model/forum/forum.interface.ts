@@ -1,6 +1,7 @@
 
 
 
+
 export const CATEGORY_PATH = 'forum/category';
 export const POST_DATA_PATH = 'forum/post/data';
 export const CATEGORY_POST_RELATION_PATH = 'forum/category-post-relation';

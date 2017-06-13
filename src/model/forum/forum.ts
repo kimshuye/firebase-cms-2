@@ -1,5 +1,5 @@
 import * as firebase from 'firebase/app';
-import { CATEGORY_PATH, CATEGORY, CATEGORIES } from './forum.interface';
+import { CATEGORY_PATH, CATEGORY, CATEGORIES, POST, POST_DATA_PATH } from './forum.interface';
 
 export class Forum {
     debugPath: string = '';
@@ -91,6 +91,38 @@ export class Forum {
         
     }
 
+    //////////////
+    /// POST
+    //////////////
+
+    createPost( post: POST, success: (post:POST) => void, error: (e) => void ) {
+
+        let ref = this.postData.push();
+        console.log("push key: ", ref.key );
+        this.setPostData( ref, post, success, error );
+
+    }
+
+
+
+    /**
+     * 
+     * It sets post data on a post reference.
+     * 
+     * 'Set post data' means to set data on a reference. So, you need 'ref' to set where.
+     * 
+     * @param ref 
+     * @param post 
+     * @param success 
+     * @param error 
+     */
+    setPostData( ref: firebase.database.ThenableReference, post: POST, success: (post:POST) => void, error: (e) => void ) {
+        post.key = ref.key;
+        post.stamp = Math.round( (new Date()).getTime() / 1000 );
+        ref.set( post ).then( () => success( post ) ).catch( error );
+    }
+
+
 
     /**
      * 
@@ -121,6 +153,14 @@ export class Forum {
     get categoryPath() : string {
         return this.path( CATEGORY_PATH );
     }
+
+    get postData() : firebase.database.Reference {
+        return  this.root.ref.child( this.postDataPath );
+    }
+    get postDataPath() : string {
+        return this.path( POST_DATA_PATH );
+    }
+
 
     path( p: string ) {
         return this.debugPath + CATEGORY_PATH;
