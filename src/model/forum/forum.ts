@@ -1,5 +1,7 @@
 import * as firebase from 'firebase/app';
-import { CATEGORY_PATH, CATEGORY, CATEGORIES, POST, POST_DATA_PATH } from './forum.interface';
+import {
+    CATEGORY_PATH, CATEGORY, CATEGORIES, POST, POST_DATA_PATH, CATEGORY_POST_RELATION_PATH
+} from './forum.interface';
 
 export class Forum {
     debugPath: string = '';
@@ -124,6 +126,38 @@ export class Forum {
 
 
 
+
+
+    //// FUNCTIONS
+
+
+    /**
+     * 
+     * @param key - is the post push key.
+     * @param post 
+     */
+    setCategoryPostRelation( key: string, post: POST ) {
+
+        // @todo error handling
+        // what is no categories?
+        console.log(post);
+        let categories = Object.keys( post.categories );
+        let p;
+        for ( let category of categories ) {
+            console.log(`category test : ${category}`);
+            if ( post.categories[ category ] === true ) {
+                console.log(`writing category: ${category}`);
+                p = this.categoryPostRelation.child( category ).child( key).set( { uid: post.uid } );
+            }
+        }
+
+        // @todo big problem here. return proper promise.
+        return p;
+
+    }
+
+
+
     /**
      * 
      * Turns undefined into null to avoid "first argument contains undefined in property firebase" error.
@@ -160,6 +194,13 @@ export class Forum {
     get postDataPath() : string {
         return this.path( POST_DATA_PATH );
     }
+    get categoryPostRelation() : firebase.database.Reference {
+        return  this.root.ref.child( this.categoryPostRelationPath );
+    }
+    get categoryPostRelationPath() : string {
+        return this.path( CATEGORY_POST_RELATION_PATH );
+    }
+    
 
 
     path( p: string ) {
