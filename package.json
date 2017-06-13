@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "angularfire2": "^4.0.0-rc.0",
-    "firebase": "^4.1.1"
+    "firebase": "^4.1.1",
+    "promise": "^7.1.1"
   }
 }

@@ -1,10 +1,12 @@
 import * as firebase from 'firebase/app';
+import * as Promise from 'promise';
+
 import {
     CATEGORY_PATH, CATEGORY, CATEGORIES, POST, POST_DATA_PATH, CATEGORY_POST_RELATION_PATH
 } from './forum.interface';
 
 export class Forum {
-    debugPath: string = '';
+    debugPath: string = ''; // debug path.
     constructor( public root: firebase.database.Reference ) {
 
     }
@@ -120,6 +122,7 @@ export class Forum {
      */
     setPostData( ref: firebase.database.ThenableReference, post: POST, success: (post:POST) => void, error: (e) => void ) {
         post.key = ref.key;
+        console.log('ref: ', ref.toString());
         post.stamp = Math.round( (new Date()).getTime() / 1000 );
         ref.set( post ).then( () => success( post ) ).catch( error );
     }
@@ -136,23 +139,35 @@ export class Forum {
      * @param key - is the post push key.
      * @param post 
      */
-    setCategoryPostRelation( key: string, post: POST ) {
+    setCategoryPostRelation( key: string, post: POST ) : Promise.IThenable<Array<any>> {
 
         // @todo error handling
         // what is no categories?
-        console.log(post);
+        if ( post === void 0 ) {
+            this.log(`post is undefined on setCategoryPostRelation`);
+            return Promise.all([]);
+        }
+        if ( post.categories === void 0 ) {
+            this.log(`post.categories is undfined`);
+            return Promise.all([]);
+        }
+        this.log(post);
         let categories = Object.keys( post.categories );
-        let p;
+        let p = [];
         for ( let category of categories ) {
-            console.log(`category test : ${category}`);
+            this.log(`category test : ${category}`);
             if ( post.categories[ category ] === true ) {
-                console.log(`writing category: ${category}`);
-                p = this.categoryPostRelation.child( category ).child( key).set( { uid: post.uid } );
+                this.log(`writing category: ${category}`);
+                this.category.child( category ).once('value').then( snap => {
+                    if ( snap.val() ) {
+                        p.push( this.categoryPostRelation.child( category ).child( key).set( { uid: post.uid } ) );
+                    }
+                    else this.error(`${category} does not exists`);
+                });
             }
         }
 
-        // @todo big problem here. return proper promise.
-        return p;
+        return Promise.all(p);
 
     }
 
@@ -204,7 +219,9 @@ export class Forum {
 
 
     path( p: string ) {
-        return this.debugPath + p;
+        p = this.debugPath + p;
+        console.log(`path: ${p}`);
+        return p;
     }
 
 
@@ -214,6 +231,14 @@ export class Forum {
     ////
     ////////////////////////////////////
     
+
+
+    log(m) {
+        console.log('LOG: ', m);
+    }
+    error(m) {
+        console.log('------> ERROR: ', m);
+    }
     
 
 }
