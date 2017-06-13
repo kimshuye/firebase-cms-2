@@ -6,49 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- *
- *
- * @code How to push
- *
-        this.database.root.child('admin')
-            .push( { 'myid': true } )
-            .then( r => console.log('success') )
-            .catch( e => console.error(e) );
-
- * @endcode
- *
- *
- * @code How to read
- *
-        this.database.root.child('admin').child( this.uid ).once('value')
-            .then( s => {
-            let re = s.val();
-            console.log(`${this.uid} is admin ? ${re}`);
-                if ( re === true ) this._isAdmin = true;
-            });
- *
- * @endcode
- *
- */
 var core_1 = require("@angular/core");
 var Database = (function () {
     function Database(af) {
         this.af = af;
-        //
         this.root = af.database.ref('/');
     }
-    /**
-     *
-     * Turns undefined into null to avoid "first argument contains undefined in property firebase" error.
-     *
-     * @param obj
-     *
-     * @code
-     *              data = this.database.undefinedToNull( data );
-     * @endcode
-     *
-     */
     Database.prototype.undefinedToNull = function (obj) {
         obj = JSON.parse(JSON.stringify(obj, function (k, v) {
             if (v === undefined)

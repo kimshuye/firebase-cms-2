@@ -29,9 +29,6 @@ var User = (function () {
         });
     }
     Object.defineProperty(User.prototype, "uid", {
-        /**
-         * GETTERS
-         */
         get: function () {
             if (this.isLogged)
                 return this.auth.currentUser.uid;
@@ -39,11 +36,6 @@ var User = (function () {
         enumerable: true,
         configurable: true
     });
-    /// eo GETTERS
-    /**
-     *
-     * @param data
-     */
     User.prototype.create = function (data) {
         return this.auth.createUserWithEmailAndPassword(data.email, data.password);
     };
@@ -53,14 +45,6 @@ var User = (function () {
             photoURL: data.photoUrl
         });
     };
-    /**
-     *
-     * @note Callback style function
-     *
-     * @param data - user registration data.
-     * @param success
-     * @param error
-     */
     User.prototype.register = function (data, success, error) {
         var _this = this;
         this.create(data)
@@ -76,9 +60,6 @@ var User = (function () {
         });
     };
     Object.defineProperty(User.prototype, "isLogged", {
-        /**
-         *
-         */
         get: function () {
             return this.auth.currentUser !== null;
         },
@@ -92,9 +73,6 @@ var User = (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * checks if the logged in user is admin.
-     */
     User.prototype.checkAdmin = function () {
         var _this = this;
         if (!this.isLogged) {
