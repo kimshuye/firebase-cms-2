@@ -3,8 +3,7 @@ import { CATEGORY_PATH, CATEGORY, CATEGORIES } from './forum.interface';
 
 export class Forum {
     debugPath: string = '';
-    category: firebase.database.Reference;
-    constructor( root ) {
+    constructor( public root: firebase.database.Reference ) {
 
     }
 
@@ -116,8 +115,24 @@ export class Forum {
 
     //// PATHS
 
-    get pathCategory() {
+    get category() : firebase.database.Reference {
+        return  this.root.ref.child( this.categoryPath );
+    }
+    get categoryPath() : string {
+        return this.path( CATEGORY_PATH );
+    }
+
+    path( p: string ) {
         return this.debugPath + CATEGORY_PATH;
     }
+
+
+    ////////////////////////////////////
+    ////
+    ////    POST
+    ////
+    ////////////////////////////////////
+    
+    
 
 }

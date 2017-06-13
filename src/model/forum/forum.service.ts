@@ -33,7 +33,7 @@ export class ForumService extends Forum {
      * @endcode
      */
     observeCategory() {
-        return this.af.list( this.pathCategory );
+        return this.af.list( this.categoryPath );
     }
 
     
