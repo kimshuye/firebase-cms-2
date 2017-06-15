@@ -11,6 +11,7 @@ export function isError( code: string ) {
 
 export const ERROR = {
     category_id_empty: 'category_id_empty',
+    post_key_empty: 'post_key_empty',
     malformed_key:'malformed_key',
     no_categories: 'no_categories',
     category_exists: 'category_exists',
