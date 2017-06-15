@@ -29,7 +29,7 @@ export class Forum {
      * @param data Category data.
      * 
      * @return Promise
-     *      if there is no error and category has created, always .then() will be called.
+     *      on sucess, promise with category id. ( if there is no error and category has created, always .then() will be called. )
      *      otherwise, .catch() will be invoked. .catch() will be invoked when,
      *              - category exists
      *              - other errors.
@@ -84,6 +84,17 @@ export class Forum {
         });
     }
 
+
+    /**
+     * 
+     * @param data Category data.
+     * 
+     * @return Promise
+     * 
+     *      on success, promies with category id
+     *      on error, .catch() will be invoked.
+     * 
+     */
     setCategory( data: CATEGORY ) : firebase.Promise < any > {
 
         if ( this.isEmpty( data.id ) ) return this.error( ERROR.category_id_empty );
@@ -92,7 +103,7 @@ export class Forum {
 
 
         // console.log("edit Category data: ", data);
-        return this.category(data.id).set( data );
+        return this.category(data.id).set( data ).then( () => data.id );
     }
 
 
@@ -123,24 +134,20 @@ export class Forum {
 
     /**
      * 
-     * Returns all the category information.
+     * Returns a promise with all the categories
      * 
      * Use this method to get all the categores. But no live-update. Only get all categories.
      * 
-     * @param success 
-     * @param error 
      * 
      * @code
     
-                    this.gets( (categories:CATEGORIES) => {
-                        console.log('categories:', categories);
-                    }, e => console.error(e) );
-
+    
      * @endcode
+     * 
      */
-    getCategories( success: ( categories: CATEGORIES ) => void, error: (e) => void ) {
+    getCategories() : firebase.Promise<any> {
         let categories: CATEGORIES = [];
-        this.category('').once('value').then( snapshot => {
+        return this.category().once('value').then( snapshot => {
             //console.log(snapshot.val());
             let val = snapshot.val();
             for( let k of Object.keys(val) ) {
@@ -148,8 +155,8 @@ export class Forum {
                 //console.log(v);
                 categories.push( v );
             }
-            success( categories );
-        }, e => error );
+            return categories;
+        });
     }
 
     /**
@@ -180,13 +187,11 @@ export class Forum {
 
     createPost( post: POST ) : firebase.Promise < any > {
 
-        if ( post.categories === void 0 || ! post.categories ) {
-            return firebase.Promise.reject( new Error( ERROR.no_categories ) );
-        }
-
+        if ( post.categories === void 0 || ! post.categories ) return this.error( ERROR.no_categories );
+        
         return this.categoriesExist( post.categories )
             .then(() => {
-                let ref = this.postData.push();
+                let ref = this.postData().push();
                 return this.setPostData( ref, post );
             });
     }
@@ -201,16 +206,22 @@ export class Forum {
      * 
      * @param ref 
      * @param post 
-     * @param success 
-     * @param error 
+     * 
+     * @return on success, a promise with post key.
+     *      otherwise, .catch() will be invoked.
      */
     setPostData( ref: firebase.database.ThenableReference, post: POST ) : firebase.Promise < any > {
         post.key = ref.key;
         // console.log('ref: ', ref.toString());
         post.stamp = Math.round( (new Date()).getTime() / 1000 );
-        return ref.set( post );
+        return ref.set( post ).then( () => post.key );
     }
 
+
+    getPostData( key ) : firebase.Promise<any> {
+        if ( this.isEmpty( key ) ) return this.error( ERROR.post_key_empty);
+        return this.postData( key ).once('value').then( s => s.val() );
+    }
 
 
     /**
@@ -253,6 +264,9 @@ export class Forum {
     /**
      * 
      * @param category 
+     * 
+     * @return
+     *      on sucess, promise with true.
      */
     categoryExists( category: string ) : firebase.Promise<any> {
         return this.category( category ).once('value')
@@ -336,16 +350,19 @@ export class Forum {
 
     //// PATHS
 
-    category( name ) : firebase.database.Reference {
-        return this.root.ref.child( this.categoryPath ).child( name );
+    category( name? ) : firebase.database.Reference {
+        if ( this.isEmpty(name) ) return this.root.ref.child( this.categoryPath );
+        else return this.root.ref.child( this.categoryPath ).child( name );
     }
 
     get categoryPath() : string {
         return this.path( CATEGORY_PATH );
     }
 
-    get postData() : firebase.database.Reference {
-        return  this.root.ref.child( this.postDataPath );
+
+    postData( key?: string ) : firebase.database.Reference {
+        if ( this.isEmpty(key) ) return this.root.ref.child( this.postDataPath );
+        else return  this.root.ref.child( this.postDataPath ).child( key );
     }
     get postDataPath() : string {
         return this.path( POST_DATA_PATH );

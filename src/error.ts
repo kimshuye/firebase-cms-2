@@ -1,18 +1,11 @@
 
 
-export function createError( code, message ) {
-    return code + ": \t" + message;
-}
-
-export function isError( m: string ){
-    if ( typeof m != 'string' ) return false;
-    if ( m.indexOf(": \t") == -1 ) return true;
-    else false;
-}
-
-export function isErrorOf( errstr: string, code: string ) {
-    if ( isError( errstr ) ) return errstr.indexOf( code ) === 0;
-    else return false;
+export function isError( code: string ) {
+    if ( code === void 0 ) return false;
+    if ( typeof code != 'string' ) return false;
+    if ( ! code ) return false;
+    if ( ERROR['code'] === void 0 ) return false;
+    return true;
 }
 
 
