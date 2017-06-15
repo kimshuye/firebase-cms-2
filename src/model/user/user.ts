@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
@@ -25,12 +23,12 @@ export class User {
     private _isAdmin: boolean = false;
     root: firebase.database.Reference;
     constructor(
-        private angularFireAuth: AngularFireAuth,
-        private angularFireDatabase: AngularFireDatabase
     ) {
 
-        this.root = angularFireDatabase.database.ref('/');
-        this.auth = angularFireAuth.auth;
+
+
+        this.root = firebase.database().ref('/');
+        this.auth = firebase.auth();
 
 
 

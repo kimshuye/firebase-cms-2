@@ -1,11 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-
-
 
 import { User } from './model/user/user';
 export { User } from './model/user/user';
@@ -25,10 +20,7 @@ export { CATEGORY, CATEGORIES, POST } from './model/forum/forum.interface';
 
 @NgModule({
   imports: [
-    CommonModule,
-    AngularFireModule,
-    AngularFireDatabaseModule,
-    AngularFireAuthModule
+    CommonModule
   ],
   declarations: [
   ],
