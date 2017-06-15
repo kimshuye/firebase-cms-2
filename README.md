@@ -57,6 +57,14 @@ export class AppModule { }
 MIT © [JaeHo Song](mailto:thruthesky@gmail.com)
 
 
+# Variables and Function Naming
+
+createXXXXX to create             createCategory(), createPost()
+editXXXXX   to edit               editCategory(),   editPost()
+setXXXXXX   to set/change data.   setCategory(),    setPost()
+
+
+
 # Database Structure & Manipulation
 
 ## One time data submisstion

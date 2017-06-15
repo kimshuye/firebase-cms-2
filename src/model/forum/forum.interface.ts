@@ -21,7 +21,7 @@ export interface POST {
     uid?: string;
     subject?: string;
     content?: string;
-    categories?: { [ v:string ]: boolean };
+    categories?: Array<string>;
     stamp?: number;
     sticky_forum?: boolean;
     sticky_all_forum?: boolean;
