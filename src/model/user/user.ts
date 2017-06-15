@@ -6,7 +6,6 @@ import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/throw';
 
 
-import { Database } from './../database/database';
 
 
 export interface USER_REGISTER {
@@ -24,23 +23,22 @@ export class User {
     auth: firebase.auth.Auth;
     private _isAdmin: boolean = false;
     constructor(
-        private angularFireAuth: AngularFireAuth,
-        private database: Database
+         public root: firebase.database.Reference
     ) {
 
-        this.auth = angularFireAuth.auth;
-        this.auth.onAuthStateChanged( (user: firebase.User) => {
-            console.log("Auth state changed");
-            if ( user ) {
-                console.log("User logged in");
-            }
-            else {
-                console.log("User logged out");
-            }
-            this.checkAdmin();
-        }, e => {
+        // this.auth = angularFireAuth.auth;
+        // this.auth.onAuthStateChanged( (user: firebase.User) => {
+        //     console.log("Auth state changed");
+        //     if ( user ) {
+        //         console.log("User logged in");
+        //     }
+        //     else {
+        //         console.log("User logged out");
+        //     }
+        //     this.checkAdmin();
+        // }, e => {
 
-        });
+        // });
 
 
     }
@@ -120,7 +118,7 @@ export class User {
             return;
         }
         console.log("Admin check");
-        this.database.root.child('admin').child( this.uid ).once('value').then( s => {
+        this.root.child('admin').child( this.uid ).once('value').then( s => {
             let re = s.val();
             console.log(`${this.uid} is admin ? ${re}`);
             if ( re === true ) this._isAdmin = true;
