@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
@@ -22,23 +23,32 @@ export interface USER_REGISTER_RESONSE {
 export class User {
     auth: firebase.auth.Auth;
     private _isAdmin: boolean = false;
+    root: firebase.database.Reference;
     constructor(
-         public root: firebase.database.Reference
+        private angularFireAuth: AngularFireAuth,
+        private angularFireDatabase: AngularFireDatabase
     ) {
 
-        // this.auth = angularFireAuth.auth;
-        // this.auth.onAuthStateChanged( (user: firebase.User) => {
-        //     console.log("Auth state changed");
-        //     if ( user ) {
-        //         console.log("User logged in");
-        //     }
-        //     else {
-        //         console.log("User logged out");
-        //     }
-        //     this.checkAdmin();
-        // }, e => {
+        this.root = angularFireDatabase.database.ref('/');
+        this.auth = angularFireAuth.auth;
 
-        // });
+
+
+        /**
+         * For admin check.
+         */
+        this.auth.onAuthStateChanged( (user: firebase.User) => {
+            console.log("Auth state changed");
+            if ( user ) {
+                console.log("User logged in");
+            }
+            else {
+                console.log("User logged out");
+            }
+            this.checkAdmin();
+        }, e => {
+
+        });
 
 
     }
@@ -100,6 +110,7 @@ export class User {
      * 
      */
     get isLogged() : boolean {
+        if (this.auth.currentUser === void 0 ) return false;
         return this.auth.currentUser !== null;
     }
 

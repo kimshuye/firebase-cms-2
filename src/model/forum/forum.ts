@@ -187,7 +187,9 @@ export class Forum {
 
     createPost( post: POST ) : firebase.Promise < any > {
 
-        if ( post.categories === void 0 || ! post.categories ) return this.error( ERROR.no_categories );
+
+
+        if ( post.categories === void 0 || post.categories.length === void 0 || post.categories.length == 0 ) return this.error( ERROR.no_categories );
         
         return this.categoriesExist( post.categories )
             .then(() => {
