@@ -289,42 +289,38 @@ export class Forum {
 
     /**
      * 
+     * 
+     * @note category exsit checkup must be done here.
+     * 
+     * 
+     * 
+     * 
+     * 
      * @param key - is the post push key.
      * @param post 
      */
-    setCategoryPostRelation( key: string, post: POST ) {
+    async setCategoryPostRelation( key: string, post: POST ) {
 
-        // @todo error handling
-        // what is no categories?
+
+        this.log(post);
+
         if ( post === void 0 ) {
             this.log(`post is undefined on setCategoryPostRelation`);
-            return Promise.all([]);
+            return;
         }
-        if ( post.categories === void 0 ) {
-            this.log(`post.categories is undfined`);
-            return Promise.all([]);
+        if ( post.categories === void 0 || post.categories.length === void 0 || post.categories.length == 0 ) {
+            this.log(`post.categories is undfined or no categories.`);
+            return;
         }
-        this.log(post);
-        let categories = Object.keys( post.categories );
-        let p = [];
-        for ( let category of categories ) {
-            this.log(`category test : ${category}`);
-            if ( post.categories[ category ] === true ) {
-                this.log(`writing category: ${category}`);
-                this.category( category ).once('value').then( snap => {
-                    if ( snap.val() ) {
-                        p.push( this.categoryPostRelation.child( category ).child( key).set( { uid: post.uid } ) );
-                    }
-                    else {
-                        this.setLastErrorMessage(`${category} does not exists`);
-                        return Promise.all( [ Promise.reject( new Error( `${category} does not exists.` )) ] );
-                    }
-                });
-            }
-        }
+        
+        for ( let category of post.categories ) {
+            this.log(`writing for category : ${category}`);
 
-        return Promise.all(p);
-
+            let re = await this.categoryExists( category );
+            if ( re !== false ) return;
+            
+            this.categoryPostRelation.child( category ).child( key).set( true );
+        }
     }
 
 
