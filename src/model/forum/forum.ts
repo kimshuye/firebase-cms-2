@@ -13,7 +13,7 @@ export class Forum {
     debugPath: string = ''; // debug path.
     lastErrorMessage: string = '';
     constructor( public root: firebase.database.Reference ) {
-
+        
     }
 
     get getLastErrorMessage() : string {
@@ -327,6 +327,23 @@ export class Forum {
 
     }
 
+
+
+    page( o ) {
+        let $ref = this.postData().orderByKey().limitToLast( o.size );
+
+        return $ref
+            .once('value')
+            .then( s => {
+                let objects = s.val();
+                let posts = [];
+                for( let k of Object.keys(objects).reverse() ) {
+                    posts.push( objects[k] );
+                }
+                return posts;
+            } );
+
+    }
 
 
     /**

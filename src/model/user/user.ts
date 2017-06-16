@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
+import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/throw';
@@ -23,15 +25,15 @@ export class User {
     private _isAdmin: boolean = false;
     root: firebase.database.Reference;
     constructor(
+
+        private angularFireAuth: AngularFireAuth,
+        private angularFireDatabase: AngularFireDatabase
+
     ) {
 
-
-
-        this.root = firebase.database().ref('/');
-        this.auth = firebase.auth();
-
-
-
+        this.root = angularFireDatabase.database.ref('/');
+        this.auth = angularFireAuth.auth;
+        
         /**
          * For admin check.
          */
